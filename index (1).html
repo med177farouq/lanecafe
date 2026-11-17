@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Lane Cafe Menu</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Jost:wght@400;500;600&display=swap">
+<style>
+/*
+VOICE: warm, quick, practical — a student checking the menu on their phone in the lane
+IDEA: the cafe's own hanging sign and printed menu, made tappable
+PICTURE: the cafe's own painting of the shopfront, so people recognise it on Druid Lane
+COLOUR and TYPE: Lane green, saffron, cream; Fraunces for names and prices, Jost for text
+LAYOUT: one column, sign-like header, directions first, then sticky tabs for drinks, food, deals
+*/
+:root{color-scheme:light dark;
+--bg:light-dark(#F7F0E3,#0F231B);--card:light-dark(#FFFFFF,#163A2C);--ink:light-dark(#163A2C,#F3E7D3);
+--soft:light-dark(#4D5F57,#C9C0AF);--line:light-dark(#E2D8C6,#2C5243);--green:#163A2C;--cream:#F3E7D3;
+--orange:light-dark(#A8560F,#E9963F);--btn:#E58A2E}
+:root[data-theme=light]{color-scheme:light}:root[data-theme=dark]{color-scheme:dark}
+*{box-sizing:border-box;min-width:0}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 Jost,system-ui,sans-serif;overflow-x:clip}
+h1,h2,h3{font-family:Fraunces,Georgia,serif;margin:0;line-height:1.05;text-wrap:balance}
+a{color:inherit}
+.wrap{max-width:720px;margin:0 auto;padding:0 max(5vw,16px)}
+header{background:var(--green);color:var(--cream)}
+.top{display:flex;align-items:center;gap:16px;padding:22px 0 18px}
+.top svg{flex:none}
+.top h1{font-size:clamp(30px,8vw,42px)}
+.top p{margin:4px 0 0;color:#E58A2E;font-weight:500;font-size:15px}
+.scene{display:block;width:100%;height:auto;border-radius:14px 14px 0 0;margin-top:4px}
+.find{background:var(--green);color:var(--cream);padding:4px 0 28px}
+.find p{margin:0 0 16px;font-size:17px}
+.btns{display:flex;flex-wrap:wrap;gap:12px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;min-height:52px;padding:0 22px;border-radius:999px;font-weight:600;font-size:17px;text-decoration:none}
+.btn.main{background:var(--btn);color:#163A2C;flex:1 1 240px}
+.btn.alt{border:2px solid #E58A2E;color:var(--cream);flex:1 1 180px}
+.btn:focus-visible,.tabs a:focus-visible{outline:3px solid #E58A2E;outline-offset:3px}
+.deal{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:18px 20px;margin:22px 0 6px;display:flex;gap:16px;align-items:center}
+.deal b{font-family:Fraunces,serif;font-size:34px;color:var(--orange);flex:none}
+.deal span{font-size:16px}
+.tabs{position:sticky;top:0;z-index:2;background:var(--bg);border-bottom:1px solid var(--line)}
+.tabs .wrap{display:flex;gap:6px;overflow-x:auto}
+.tabs a{flex:none;display:flex;align-items:center;min-height:52px;padding:0 16px;text-decoration:none;font-weight:600;color:var(--soft);border-bottom:3px solid transparent}
+.tabs a[aria-current=page]{color:var(--ink);border-color:var(--btn)}
+section{padding:8px 0 28px}
+section[hidden]{display:none}
+h2{font-size:32px;margin:26px 0 4px}
+.cat{font-family:Jost,sans-serif;font-size:19px;font-weight:600;color:var(--orange);margin:28px 0 6px}
+.sizes{font-size:13px;color:var(--soft);text-align:right;margin:-26px 0 4px}
+.item{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:2px 16px;padding:12px 0;border-bottom:1px solid var(--line)}
+.item h3{font-size:18px;font-family:Jost,sans-serif;font-weight:600}
+.item .p{font-family:Fraunces,serif;font-weight:700;font-size:18px;white-space:nowrap;text-align:right}
+.item .p i{font-style:normal;color:var(--soft);font-weight:600;margin-left:10px}
+.item .d{grid-column:1/-1;color:var(--soft);font-size:15px;margin:0}
+.item .a{grid-column:1/-1;font-size:13px;color:var(--soft)}
+.note{font-size:14px;color:var(--soft);margin:12px 0 0}
+footer{background:var(--green);color:var(--cream);padding:28px 0 36px;font-size:15px}
+footer h3{font-size:20px;margin-bottom:8px}
+footer p{margin:0 0 10px}
+@media(prefers-reduced-motion:no-preference){.steam path{animation:rise 3s ease-in-out infinite}.steam path:nth-child(2){animation-delay:.6s}.steam path:nth-child(3){animation-delay:1.2s}}
+@keyframes rise{0%,100%{opacity:.35;transform:translateY(2px)}50%{opacity:1;transform:translateY(-2px)}}
+</style>
+</head>
+<body>
+<header>
+<div class="wrap top">
+<svg viewBox="36 38 136 144" width="64" height="68" role="img" aria-label="The Lane Cafe logo">
+<g class="steam"><path d="M78.8 98.8 A30 30 0 0 1 121.2 98.8" fill="none" stroke="#F3E7D3" stroke-width="9" stroke-linecap="round"/><path d="M63.2 83.2 A52 52 0 0 1 136.8 83.2" fill="none" stroke="#F3E7D3" stroke-width="9" stroke-linecap="round"/><path d="M47.7 67.7 A74 74 0 0 1 152.3 67.7" fill="none" stroke="#F3E7D3" stroke-width="9" stroke-linecap="round"/></g>
+<path d="M56 114 H144 C144 152 126 178 100 178 C74 178 56 152 56 114 Z" fill="#E58A2E"/>
+<circle cx="150" cy="132" r="11" fill="none" stroke="#E58A2E" stroke-width="7"/>
+<g transform="translate(90 148) rotate(25)"><ellipse rx="8" ry="13" fill="#163A2C"/></g>
+<g transform="translate(110 144) rotate(35)"><ellipse rx="8" ry="13" fill="#163A2C"/><g fill="#E58A2E"><rect x="-2.6" y="-2.6" width="5.2" height="5.2"/><rect x="-2.6" y="-2.6" width="5.2" height="5.2" transform="rotate(45)"/></g></g>
+</svg>
+<div><h1>The Lane Cafe</h1><p>Food · Coffee · Internet — Galway since 2014</p></div>
+</div>
+<div class="wrap">
+<img class="scene" src="lanecafe-art.jpg" width="1000" height="1272" alt="Painting of The Lane Cafe on Druid Lane: the white house with teal shutters, the hanging sign and outdoor tables">
+</div>
+</header>
+
+<div class="find">
+<div class="wrap">
+<p>Turn off Quay Street into <b>Druid Lane</b>, near the Spanish Arch. Look for the white house with teal shutters and the hanging sign.</p>
+<div class="btns">
+<a class="btn main" href="https://www.google.com/maps/dir/?api=1&amp;destination=The%20Lane%20Cafe%2C%201%20Druid%20Lane%2C%20Galway%2C%20Ireland">
+<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg>
+Get directions</a>
+<a class="btn alt" href="tel:+35391536980">Call 091 536 980</a>
+</div>
+</div>
+</div>
+
+<div class="wrap">
+<div class="deal"><b>10%</b><span><strong>Student discount</strong> with a valid student card. Bring your own cup and save 15c. Please order at the counter.</span></div>
+</div>
+
+<nav class="tabs" aria-label="Menu sections"><div class="wrap">
+<a href="#drinks">Coffee &amp; drinks</a><a href="#food">Food</a><a href="#deals">Deals</a>
+</div></nav>
+
+<div class="wrap">
+<section id="drinks"><h2>Coffee &amp; drinks</h2><div id="drinks-list"></div><p class="note">Two prices = regular · large.</p></section>
+<section id="food" hidden><h2>Food</h2><p class="note">Sandwiches served until 5pm.</p><div id="food-list"></div></section>
+<section id="deals" hidden><h2>Deals</h2><div id="deals-list"></div><p class="note">Student discount: 10% with a valid student card.</p></section>
+</div>
+
+<footer><div class="wrap">
+<h3>The Lane Cafe</h3>
+<p>1 Druid Lane, Quay Street, Galway · 091 536 980</p>
+<p><b>Allergens:</b> A gluten, B crustaceans, C eggs, D fish, E peanuts, F soybeans, G milk, H tree nuts, L celery, M mustard, N sesame, O sulphites, P lupin, R molluscs. Please ask staff if you have an allergy or intolerance.</p>
+</div></footer>
+
+<script>
+{
+const drinks=[
+["Classic coffee",[["Espresso","A short, strong shot of coffee.","None as standard","2.95","3.40"],["Macchiato","Espresso marked with a little milk foam.","G","3.35","3.60"],["Americano","Espresso topped with hot water.","None as standard","3.45","3.90"],["Latte","Espresso with steamed milk and light foam.","G","3.95","4.60"],["Cappuccino","Espresso, steamed milk and foam, finished with chocolate.","G","3.95","4.60"],["Flat White","Espresso with steamed milk and a smooth finish.","G","4.00"],["Noss Noss","Moroccan-style half coffee, half steamed milk, served smooth and balanced.","G","4.10"]]],
+["The Lane special hot drinks",[["Caramel Latte","Espresso, steamed milk, caramel and butterscotch.","G","5.20","5.80"],["Hot Chocolate","Smooth hot chocolate with cream and marshmallow.","G","5.20","5.80"],["Mocha Coffee","Espresso, hot milk, chocolate and cacao.","G","5.20","5.80"],["Cookies Coffee","Espresso, hot milk, cinnamon, cookie pieces and chocolate.","A, C, F, G","5.40","6.00"],["Spiced Latte","Espresso, steamed milk, cinnamon, cardamom and honey.","G","4.95","5.60"],["Orange Blossom Latte","Espresso, milk, orange blossom and vanilla.","G","5.20","5.80"],["Date & Cardamom Latte","Espresso, milk, date sweetness and cardamom.","G","5.40","6.00"],["Almond Rose Latte","Espresso, milk, almond and a light rose finish.","G, H","5.20","5.80"]]],
+["Iced coffee",[["Iced Americano","Espresso over ice, topped with cold water.","None as standard","4.00","4.60"],["Iced Latte","Chilled milk over ice with espresso.","G","4.60","5.30"],["Vanilla Iced Latte","Iced latte with smooth vanilla syrup.","G","4.95","5.70"],["Caramel Iced Mocha","Espresso, milk, chocolate and caramel over ice.","G","5.20","5.95"],["Fresh Mint Iced Latte","Espresso, milk and fresh mint over ice.","G","5.40","6.20"],["Orange Blossom Iced Latte","Iced latte with orange blossom and vanilla.","G","5.40","6.20"],["Iced Date Latte","Espresso, milk and date sweetness over ice.","G","5.60","6.40"]]],
+["Tea & chai",[["Breakfast Tea","Classic black tea.","None as standard","3.00"],["Herbal Tea Selection","Ask at the counter for today's selection.","Check flavour selection","3.50"],["Fresh Mint Tea","Fresh mint and green tea, lightly sweetened.","None as standard","4.55"],["Spiced Chai Latte","Warm chai spices with steamed milk.","G","4.80"],["Vanilla Chai Latte","Chai spices, steamed milk and vanilla.","G","4.90"]]],
+["Matcha, chai & wellness",[["Matcha Latte","Matcha green tea with steamed milk.","G","5.20"],["Iced Matcha Latte","Matcha, cold milk and ice.","G","5.40"],["Strawberry Matcha Latte","Iced matcha with milk and strawberry.","G","5.80"],["Vanilla Matcha Latte","Matcha, milk and a hint of vanilla.","G","5.60"],["Mint Matcha Latte","Matcha, milk, fresh mint and organic honey.","G","5.90"],["Turmeric Honey Latte","Turmeric, steamed milk and honey.","G","5.20"]]],
+["The Lane frappés",[["Oreo Lane Frappe","Vanilla ice cream, milk, Oreo biscuits and cream.","A, F, G","5.40","6.20"],["Toffee Caramel Frappe","Espresso, vanilla ice cream, caramel and butterscotch.","G","5.40","6.20"],["Mocha Chocolate Frappe","Espresso, chocolate ice cream, milk and cream.","G","5.40","6.20"],["Fresh Mint Frappe","Espresso, vanilla ice cream, mint and fresh mint.","G","5.40","6.20"],["Date & Cinnamon Frappe","Vanilla ice cream, milk, date and cinnamon.","G","5.70","6.50"],["Almond Frappe","Vanilla ice cream, milk and almond.","G, H","5.70","6.50"]]],
+["Smoothies",[["Strawberry & Berries","Mixed berries, yoghurt and milk.","G","5.70","6.50"],["Mango & Strawberry","Mango, strawberry, yoghurt and milk.","G","5.70","6.50"],["Pineapple & Mango","Pineapple, mango, yoghurt and honey.","G","5.70","6.50"],["Chocolate & Berries","Berries, cacao, yoghurt and milk.","G","5.70","6.50"],["Date, Banana, Avocado & Almond","Dates, banana, avocado, almond, milk and organic honey.","G, H","5.70","6.50"],["Orange & Mango","Orange, mango, yoghurt, organic honey and cinnamon powder.","G","5.70","6.50"]]],
+["Add-ons",[["Extra espresso shot","","None as standard","0.90"],["Syrup","","Check flavour and supplier label","0.50"],["Alternative milk","Oat, almond or coconut. Oat may contain gluten; almond contains nuts.","","0.50"],["Cream","","G","0.50"]]]
+];
+const food=[
+["Soup & light lunch",[["Soup of the Day","Served with warm house pitta bread.","A, L — may vary daily, please ask staff","7.50"]]],
+["Ciabatta sandwiches",[["Moroccan Spiced Chicken","Spiced chicken, chilli mayo, tomato, red onion, lettuce and mozzarella. Served with crisps and salad.","A, C, G, M","10.95"],["Veggie Hummus","Hummus, grilled aubergine, courgette, roasted seeds, sun-dried tomato, rocket and caramelised onion.","A, N","9.55"],["Salmon & Avocado","Salmon, avocado, rocket, capers, crispy onion and sun-dried tomato.","A, D","11.95"],["Classic Ham & Cheese","Toasted ham, cheddar, tomato, red onion and mustard mayo.","A, C, G, M","9.95"],["Harissa Roasted Beef","Sliced beef, caramelised red onion, mixed leaves, hummus and mild harissa mayo.","A, C, M, N","11.95"],["Add soup","","May vary daily — please ask staff","+3.50"]]],
+["Pizza",[["Margherita","Tomato sauce, mozzarella and basil.","A, G","12.50"],["Pepperoni","Tomato sauce, mozzarella and pepperoni.","A, G","13.50"],["Ham & Mushroom","Tomato sauce, mozzarella, ham and mushrooms.","A, G","13.50"],["Veggie Pizza","Tomato sauce, mozzarella, peppers, onion, courgette, mushroom and rocket.","A, G","13.50"],["Moroccan Chicken Pizza","Tomato sauce, mozzarella, spiced chicken, red onion, peppers and harissa drizzle.","A, G","13.95"],["Marrakesh Pizza","Tomato sauce, mozzarella, roasted beef and vegetables, olives, feta and mild Moroccan spice.","A, G","13.95"],["Galway Bay Pizza","Tomato sauce, mozzarella, smoked salmon, red onion, chilli oil and capers.","A, D, G","14.95"]]],
+["Garlic bread & pizza bread",[["Garlic Bread","House pizza bread with garlic oil.","A","7.50"],["Garlic Bread with Cheese","Garlic bread topped with mozzarella.","A, G","8.50"],["Buffalo Mozzarella & Tomato Bread","Warm pizza bread with tomato, mozzarella and basil.","A, G","9.50"],["Four Cheese Garlic Bread","Garlic bread with mixed cheeses.","A, G","9.50"],["Garlic Bread with Spicy Olives","Garlic bread topped with spicy olives and sun-dried tomato.","A, G","9.95"]]],
+["Salads & light plates",[["Chicken Caesar Salad","Chicken, cos lettuce, croutons, parmesan and Caesar dressing.","A, C, D, G, M","11.95"],["Buffalo Mozzarella & Tomato Salad (V)","Buffalo mozzarella, tomatoes and avocado, with fresh basil, mixed leaves, house dressing and toasted mixed seeds.","G, N, M","10.95"],["Moroccan Trio Salad","Roasted aubergine salad, spicy olives, hummus, herbs, lemon and olive oil, served with house bread.","A, N","11.95"],["Falafel Plate","Falafel, hummus, leaves, salsa and house pitta bread.","A, N","11.95"],["Hummus & Warm Pitta Bread","Creamy hummus, olive oil and warm pitta bread.","A, N","8.50"]]],
+["Sides & dips",[["Mixed Olives","Olives with herbs and olive oil.","O","3.95"],["Hummus","Served as a side dip.","N","3.50"],["Harissa Mayo","Mild spicy Moroccan-style mayo.","C, M","1.50"],["Garlic Aioli","Classic garlic dip.","C, M","1.50"],["Caesar Dip","Creamy Caesar-style dip.","C, D, G, M","1.50"],["House Pitta Bread","","A","4.25"]]],
+["Cakes & pastries",[["Cakes & pastries","Available at the counter.","A, C, G — may contain H, please ask staff",""]]]
+];
+const deals=[["Food deals",[["Regular Coffee with a Pastry","","","6.95"],["Soup of the Day with Regular Coffee","","","10.95"],["Ciabatta Sandwich with Regular Coffee","","","13.95"],["Any Garlic Bread with Soft Drink or Regular Coffee","","","10.50"],["Any Classic Pizza with Soft Drink or Regular Coffee","","","15.95"],["Any Salad with Regular Smoothie","","","15.95"]]]];
+const esc=s=>s.replace(/&/g,'&amp;').replace(/</g,'&lt;');
+const price=(a,b)=>a?(a.startsWith('+')?'+€'+a.slice(1):'€'+a)+(b?'<i>€'+b+'</i>':''):'';
+const render=data=>data.map(([cat,items])=>`<h3 class="cat">${esc(cat)}</h3>`+items.map(([n,d,al,p1,p2])=>`<div class="item"><h3>${esc(n)}</h3><span class="p">${price(p1,p2)}</span>${d?`<p class="d">${esc(d)}</p>`:''}${al?`<span class="a">Contains: ${esc(al)}</span>`:''}</div>`).join('')).join('');
+document.getElementById('drinks-list').innerHTML=render(drinks);
+document.getElementById('food-list').innerHTML=render(food);
+document.getElementById('deals-list').innerHTML=render(deals);
+const ids=['drinks','food','deals'];
+const show=()=>{const h=location.hash.slice(1);const cur=ids.includes(h)?h:'drinks';
+ids.forEach(id=>{document.getElementById(id).hidden=id!==cur});
+document.querySelectorAll('.tabs a').forEach(a=>{if(a.getAttribute('href')==='#'+cur)a.setAttribute('aria-current','page');else a.removeAttribute('aria-current')});
+if(ids.includes(h)){const t=document.querySelector('.tabs');if(t.getBoundingClientRect().top<0)t.scrollIntoView()}};
+window.addEventListener('hashchange',show);show();
+}
+</script>
+</body>
+</html>
